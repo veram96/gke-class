@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+  namespace: curso-_USERNAME_
+spec: 
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  strategy:
+    type: Recreate # terminates all the pods and replaces them with the new version.
+  template: 
+    metadata: 
+      labels: 
+        app: mysql
+    spec: 
+      containers:
+        - name: mysql
+          image: mysql:8.0
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: mysql
+          ports:
+            - containerPort: 3306
+              name: mysql    
+          volumeMounts:
+            # - name: mysql-persistent-storage
+            #   mountPath: /var/lib/mysql    
+            - name: usermanagement-dbcreation-script
+              mountPath: /docker-entrypoint-initdb.d                                            
+      volumes: 
+        # - name: mysql-persistent-storage
+        #   persistentVolumeClaim:
+        #     claimName: pv-course
+        - name: usermanagement-dbcreation-script
+          configMap:
+            name: db-script

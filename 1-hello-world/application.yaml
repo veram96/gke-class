@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: curso-_USERNAME_
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webserver-_USERNAME_-deployment
+  namespace: curso-_USERNAME_
+spec:
+  selector:
+    matchLabels:
+      app: webserver-_USERNAME_
+  template:
+    metadata:
+      labels:
+        app: webserver-_USERNAME_
+    spec:
+      containers:
+      - name: webserver-_USERNAME_
+        image: nginx
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+            ephemeral-storage: "1Gi"
+          limits:
+            memory: "512Mi"
+            cpu: "250m"
+            ephemeral-storage: "1Gi"
+        ports:
+        - containerPort: 80
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: webserver-_USERNAME_-service
+  namespace: curso-_USERNAME_
+spec:
+  selector:
+    app: webserver-_USERNAME_
+  ports:
+  - port: 80
+    protocol: TCP
